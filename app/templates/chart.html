@@ -1,0 +1,67 @@
+<!-- filepath: c:\Users\Gamer\PycharmProjects\p3-front\flask-mongo-image-viewer\app\templates\chart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Barras</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Escala el gráfico al 70% */
+        #chart-container {
+            width: 70%;
+            margin: 0 auto; /* Centra el gráfico */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Gráfico de Barras</h1>
+        <div id="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+        <a href="/" class="btn btn-primary mt-4">Volver</a>
+    </div>
+
+    <script>
+        // Configuración inicial del gráfico
+        const ctx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // Etiquetas vacías inicialmente
+                datasets: [{
+                    label: 'Registros por hora',
+                    data: [], // Datos vacíos inicialmente
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Color de fondo rojo
+                    borderColor: 'rgba(255, 99, 132, 1)', // Color del borde rojo
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Solicitud AJAX para obtener los datos desde /grafico
+        $.ajax({
+            url: '/grafico',
+            method: 'GET',
+            success: function(response) {
+                // Actualiza las etiquetas y los datos del gráfico
+                barChart.data.labels = response.labels;
+                barChart.data.datasets[0].data = response.data;
+                barChart.update(); // Actualiza el gráfico
+            },
+            error: function(error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        });
+    </script>
+</body>
+</html>
