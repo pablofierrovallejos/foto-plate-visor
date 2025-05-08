@@ -13,55 +13,82 @@
             width: 70%;
             margin: 0 auto; /* Centra el gráfico */
         }
+
+        /* Asegúrate de que el canvas se ajuste al contenedor */
+        #chart-container canvas {
+            width: 100% !important; /* Ajusta el ancho del canvas al 100% del contenedor */
+            height: auto !important; /* Mantén la proporción del alto */
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Gráfico de Barras</h1>
-        <div id="chart-container">
-            <canvas id="barChart"></canvas>
+        <div class="container">
+            <h1 class="mt-5">Gráfico de Barras</h1>
+            <div id="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+            <a href="/" class="btn btn-primary mt-4">Volver</a>
         </div>
-        <a href="/" class="btn btn-primary mt-4">Volver</a>
-    </div>
 
-    <script>
-        // Configuración inicial del gráfico
-        const ctx = document.getElementById('barChart').getContext('2d');
-        const barChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [], // Etiquetas vacías inicialmente
-                datasets: [{
-                    label: 'Registros por hora',
-                    data: [], // Datos vacíos inicialmente
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Color de fondo rojo
-                    borderColor: 'rgba(255, 99, 132, 1)', // Color del borde rojo
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+        <script>
+            // Define el gráfico inicialmente
+            const ctx = document.getElementById('barChart').getContext('2d');
+            let barChart = null;
+        
+            // Función para inicializar o actualizar el gráfico
+            function updateChart(labels, data) {
+                if (barChart) {
+                    // Si el gráfico ya existe, actualiza los datos
+                    barChart.data.labels = labels;
+                    barChart.data.datasets[0].data = data;
+                    barChart.update();
+                } else {
+                    // Si el gráfico no existe, inicialízalo
+                    barChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Registros por hora',
+                                data: data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            interaction: {
+                                mode: 'nearest', // Cambia el modo de interacción
+                                axis: 'x', // Interacción solo en el eje X
+                                intersect: false // Evita redibujar al pasar el mouse entre barras
+                            },
+                            animation: {
+                                duration: 0 // Desactiva la animación para evitar redibujos
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
                 }
             }
-        });
-
-        // Solicitud AJAX para obtener los datos desde /grafico
-        $.ajax({
-            url: '/grafico',
-            method: 'GET',
-            success: function(response) {
-                // Actualiza las etiquetas y los datos del gráfico
-                barChart.data.labels = response.labels;
-                barChart.data.datasets[0].data = response.data;
-                barChart.update(); // Actualiza el gráfico
-            },
-            error: function(error) {
-                console.error('Error al obtener los datos:', error);
-            }
-        });
-    </script>
+        
+            // Solicitud AJAX para obtener los datos desde /grafico
+            $.ajax({
+                url: '/grafico?date={{ date }}', // Asegúrate de pasar la fecha seleccionada
+                method: 'GET',
+                success: function(response) {
+                    if (response.labels && response.data) {
+                        updateChart(response.labels, response.data); // Actualiza o inicializa el gráfico
+                    }
+                },
+                error: function(error) {
+                    console.error('Error al obtener los datos:', error);
+                }
+            });
+        </script>
 </body>
 </html>

@@ -46,11 +46,18 @@ def graficos():
 
 @main.route('/chart')
 def chart():
-    # Simula datos para el gráfico
-    labels = [f"{hour}:00" for hour in range(24)]  # Horas del día
-    data = [0] * 24  # Inicializa con ceros
+    date = request.args.get('date')  # Obtiene la fecha seleccionada
+    if not date:
+        date = datetime.now().strftime('%Y-%m-%d')  # Usa la fecha actual si no se proporciona una
 
-    # Aquí puedes agregar lógica para calcular los registros por hora
-    # Ejemplo: data[hora] = cantidad_de_registros
+    image_model = ImageModel(mongo)
+    images = image_model.get_images_by_date(date)
 
-    return render_template('chart.html', labels=labels, data=data)
+    # Calcular registros por hora
+    labels = [f"{hour}:00" for hour in range(24)]
+    data = [0] * 24
+    for image in images:
+        hour = int(image['fechahora'][11:13])  # Extraer la hora del campo fechahora
+        data[hour] += 1
+
+    return render_template('chart.html', labels=labels, data=data, date=date)

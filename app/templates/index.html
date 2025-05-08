@@ -14,11 +14,9 @@
     <div class="container">
         <h1 class="mt-5">Image Viewer</h1>
         
-        <!-- Enlace al gráfico de barras -->
-        <div class="mb-4">
-            <a href="/chart" class="btn btn-info">Ver gráfico de barras</a>
-        </div>
 
+     
+        
         <!-- Formulario para seleccionar la fecha -->
         <form method="GET" action="/" class="mb-4">
             <div class="form-group">
@@ -27,6 +25,23 @@
             </div>
             <button type="submit" class="btn btn-primary">Consultar</button>
         </form>
+
+        <!-- Enlace al gráfico de barras -->
+        <div class="mb-4">
+            <a href="#" id="chartButton" class="btn btn-info">Ver gráfico de barras</a>
+        </div>
+        <script>
+            document.getElementById('chartButton').addEventListener('click', function (event) {
+                event.preventDefault();
+                const date = document.getElementById('date').value;
+                if (date) {
+                    window.location.href = `/chart?date=${date}`;
+                } else {
+                    alert('Por favor selecciona una fecha antes de continuar.');
+                }
+            });
+        </script>
+
 
         <div class="row mt-4">
             {% for image in images %}
