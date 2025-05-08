@@ -1,7 +1,7 @@
 # foto-plate-visor
 Visor web reonocimiento y conteo de vehiculos
 
-1.- Permtie visualizar las imagenes capturadas por el modulo de reconocimiento de vehiculos.
+1.- Permtie visualizar las imagenes capturadas por el modulo de reconocimiento de vehiculos.<br>
 2.- Permite visualizar grafico con total vehiculos por hora.
 
 Crear Entorno virtual 
