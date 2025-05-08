@@ -15,8 +15,12 @@ Ejecutar con:
 > C:\Users\Gamer\PycharmProjects\p3-front\foto-plate-visor> .\.venv\Scripts\activate
 > flask run
 
-
+Pantalla principal
 ![image](https://github.com/user-attachments/assets/862139ad-e256-466a-9a32-64f3aa4bb804)
+
+
+Pantalla gráficos
+![image](https://github.com/user-attachments/assets/4717c48f-33a0-43e3-88fa-47b5047eef2c)
 
 
 Configuraciòn MongoDB
