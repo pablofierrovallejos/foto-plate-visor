@@ -1,5 +1,7 @@
 from flask_pymongo import PyMongo
 from datetime import datetime
+from app import db
+
 
 class ImageModel:
     def __init__(self, mongo):
@@ -33,3 +35,49 @@ class ImageModel:
 
     def add_image(self, image_data):
         self.mongo.db.mitrack.insert_one(image_data)
+        
+        
+        
+        
+        
+        
+
+class MiTrack(db.Model):
+    __tablename__ = 'mitrack'
+
+    idmitrack = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    tipo = db.Column(db.String(15), nullable=True)
+    fechahora = db.Column(db.DateTime, nullable=True)
+    direccion = db.Column(db.String(10), nullable=True)
+    color = db.Column(db.String(15), nullable=True)
+    marca = db.Column(db.String(15), nullable=True)
+    modelo = db.Column(db.String(15), nullable=True)
+    patente = db.Column(db.String(8), nullable=True)
+    image = db.Column(db.LargeBinary, nullable=True)
+
+    def __repr__(self):
+        return f"<MiTrack {self.idmitrack} - {self.tipovehiculo}>"
+
+    @staticmethod
+    def get_all_images():
+        # Obtiene todas las imágenes ordenadas por fecha y hora descendente
+        return MiTrack.query.order_by(MiTrack.fechahora.desc()).all()
+
+    @staticmethod
+    def get_images_by_date(date):
+        # Filtra las imágenes por una fecha específica
+        start_of_day = datetime.strptime(f"{date} 00:00:00", "%Y-%m-%d %H:%M:%S")
+        end_of_day = datetime.strptime(f"{date} 23:59:59", "%Y-%m-%d %H:%M:%S")
+        return MiTrack.query.filter(MiTrack.fechahora >= start_of_day, MiTrack.fechahora <= end_of_day).order_by(MiTrack.fechahora.desc()).all()
+
+    @staticmethod
+    def get_image_by_id(image_id):
+        # Obtiene una imagen específica por su ID
+        return MiTrack.query.get(image_id)
+
+    @staticmethod
+    def add_image(data):
+        # Agrega una nueva imagen a la base de datos
+        new_image = MiTrack(**data)
+        db.session.add(new_image)
+        db.session.commit()        
