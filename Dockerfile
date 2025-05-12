@@ -19,3 +19,6 @@ ENV FLASK_RUN_HOST=0.0.0.0
 
 # Comando para ejecutar la aplicación
 CMD ["python", "-m", "flask", "run"]
+
+# docker build -t webtrack-app:v2 .
+# docker run -p 5000:5000 -d webtrack-app:v2
