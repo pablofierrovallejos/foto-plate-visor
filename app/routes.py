@@ -136,7 +136,7 @@ def chart():
 @main.route('/video_feed')
 def video_feed():
     rtsp_url = "rtsp://admin:96552333A@192.168.2.64:554/Streaming/channels/101"  # URL RTSP de la cámara
-
+    #rtsp_url = "rtsp://admin:96552333A@host.docker.internal:554/Streaming/channels/101"
     def generate_frames():
         cap = cv2.VideoCapture(rtsp_url)
         if not cap.isOpened():
