@@ -1,0 +1,50 @@
+<!-- ...inicio del archivo... -->
+<body>
+    <div class="header-morado">
+        <h2 class="mb-0">Image Viewer</h2>
+    </div>
+
+    <div class="container mt-3">
+        <table class="table table-borderless shadow-sm rounded" style="border: 1px solid #dee2e6;">
+            <tr>
+                <!-- Primera columna: cabecera -->
+                <td style="width: 40%; vertical-align: top;">
+                    <!-- Ya no es necesario el h4 aquí, está en la cabecera principal -->
+                    <!-- ...resto del formulario... -->
+                </td>
+
+                <!-- Segunda columna: video en tiempo real -->    
+                <td style="width: 60%; text-align: center;">
+                    <div class="monitor" style="padding-top: 10px;">
+                        <h4 class="video-header-morado">Video en tiempo real</h4>
+                        <img src="http://localhost:5001/video_feed" alt="Stream en vivo" style="max-width:100%;"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- ...resto del archivo... -->
+
+    <style>
+        .header-morado {
+            background: #6f42c1;
+            color: #fff;
+            padding: 18px 0 12px 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 8px rgba(111,66,193,0.08);
+            margin-bottom: 0;
+        }
+        .video-header-morado {
+            background: #6f42c1;
+            color: #fff;
+            padding: 10px 0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+    </style>
+<!-- ...resto del archivo... -->
+</body>

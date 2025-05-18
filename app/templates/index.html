@@ -9,18 +9,130 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <style>
+        body {
+            background: #181824;
+            color:rgb(92, 12, 12);
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .header-morado {
+            background:rgb(15, 3, 36);
+            color: #fff;
+            padding: 18px 0 12px 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 8px rgba(23, 5, 56, 0.08);
+            margin-bottom: 0;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .table {
+            background: #232336;
+            color:rgb(112, 26, 26);
+        }
+        .table-borderless td, .table-borderless th {
+            border: none;
+        }
+        .shadow-sm {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .rounded {
+            border-radius: 12px;
+        }
+        .video-header-morado {
+            background:rgb(105, 14, 14);
+            color: #fff;
+            padding: 10px 0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .monitor {
+            background: #181824;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        img {
+            background: #232336;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        }
+          /* ...otros estilos... */
+        input[type="date"].form-control {
+            background: #232336;
+            color:rgb(126, 90, 90);
+            border: 1px solid #44445a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: none;
+            transition: border-color 0.2s;
+        }
+        input[type="date"].form-control:focus {
+            border-color: #6f42c1;
+            background: #232336;
+            color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(111,66,193,0.15);
+        }
+        label[for="date"] {
+            color:rgb(13, 57, 77);
+            font-weight: 500;
+        }
+        /* Opcional: Cambia el color del icono del calendario en navegadores Webkit */
+        input[type="date"].form-control::-webkit-calendar-picker-indicator {
+            filter: invert(1) hue-rotate(270deg) brightness(0.8);
+        }
+        /* ...otros estilos... */
+        .card {
+            border: 1px solid #34344a !important; /* Borde dark */
+            background: #232336;
+            border-radius: 12px;
+        }
+        /* ...otros estilos... */
+        .card-body {
+            background: #232336;
+            color: #e0e0e0;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+        }
+        .card-title, .card-text, .card-body small {
+            color: #e0e0e0;
+        }
+        .card-text {
+            margin-bottom: 0.4rem; /* Reduce el espacio entre filas (default es 0.8rem) */
+            line-height: 1.1;      /* Opcional: reduce la altura de línea */
+        }
+
+        /* ...otros estilos... */
+        .table {
+            background: #232336;
+            color: rgb(112, 26, 26);
+            border: 1px solid #34344a !important; /* Borde dark para toda la tabla */
+        }
+        .table thead th {
+            background: #232336;
+            color: #e0e0e0;
+            border-bottom: 2px solid #34344a !important; /* Borde dark para la cabecera */
+        }
+        /* ...otros estilos... */
+
+    </style>
 </head>
 <body>
 
 
 
     <div class="container">
-        <table class="table table-borderless shadow-sm rounded" style="border: 1px solid #dee2e6;">
+        <table class="table table-borderless shadow-sm rounded">
             <tr>
                 <!-- Primera columna: cabecera -->
-                <td style="width: 50%; vertical-align: top;">
+                <td style="width: 40%; vertical-align: top;">
                     <div class="cabecera">
-                        <h1 class="mt-5">Image Viewer</h1>
+                        <h4 class="mt-5">Image Viewer</h4>
                         
                         <!-- Formulario para seleccionar la fecha -->
                         <form method="GET" action="/" class="mb-4">
@@ -47,10 +159,10 @@
                 </td>
 
                 <!-- Segunda columna: video en tiempo real -->    
-                <td style="width: 50%; text-align: center;">
-                    <div class="monitor" style="padding-top: 50px;">
-                        <h4>Video en tiempo real</h3>
-                        <img src="{{ url_for('main.video_feed') }}" alt="Video en tiempo real" style="width: 100%; height: auto; border: 1px solid #dee2e6;">
+                <td style="width: 60%; text-align: center;">
+                    <div class="monitor" style="padding-top: 10px;">
+                        <!-- <img src="{{ url_for('main.video_feed') }}" alt="Video en tiempo real" style="width: 100%; height: auto; border: 1px solid #dee2e6;"> -->
+                        <img src="http://localhost:5001/video_feed" alt="Stream en vivo" style="max-width:100%;"/>
                     </div>
                 </td>
 
@@ -61,12 +173,12 @@
 
     <div class="container">
         <!-- Formulario para seleccionar la fecha -->
-        <form method="get" action="/">
-            <div class="form-group">
-                <label for="date">Seleccionar fecha:</label>
+        <form method="get" action="/" class="form-inline mb-3">
+            <div class="form-group mr-2 mb-2">
+                <label for="date" class="mr-2">Seleccionar fecha:</label>
                 <input type="date" id="date" name="date" class="form-control" value="{{ selected_date if selected_date else '' }}">
             </div>
-            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
         </form>
 
         <div class="row mt-4">
@@ -76,8 +188,8 @@
                         <div class="card mb-4">
                             <img src="data:image/jpeg;base64,{{ image.image | b64encode }}" class="card-img-top zoomable-image" alt="Image">
                             <div class="card-body">
-                                <h5 class="card-title">Tipo de Vehículo: {{ image.tipo }}</h5>
-                                <p class="card-text">Dirección: {{ image.direccion }}</p>
+                                <p class="card-text"><small class="text-muted">Tipo de Vehículo: {{ image.tipo }}</small></p>
+                                <p class="card-text"><small class="text-muted">Dirección: {{ image.direccion }}</small></p>
                                 <p class="card-text"><small class="text-muted">Fecha y hora: {{ image.fechahora }}</small></p>
                             </div>
                         </div>
