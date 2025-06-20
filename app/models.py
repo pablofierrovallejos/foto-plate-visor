@@ -53,8 +53,11 @@ class MiTrack(db.Model):
     marca = db.Column(db.String(15), nullable=True)
     modelo = db.Column(db.String(15), nullable=True)
     patente = db.Column(db.String(8), nullable=True)
-    image = db.Column(db.LargeBinary, nullable=True)
-
+    #image = db.Column(db.LargeBinary, nullable=True)
+    #imageplate = db.Column(db.LargeBinary, nullable=True)
+    imagefile_env = db.Column(db.String(35), nullable=True)
+    imagefile_plt = db.Column(db.String(35), nullable=True)
+    
     def __repr__(self):
         return f"<MiTrack {self.idmitrack} - {self.tipovehiculo}>"
 

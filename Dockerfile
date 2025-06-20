@@ -43,7 +43,7 @@ CMD ["python", "-m", "flask", "run"]
 
 # docker build -t webtrack-app:v2 .
 # docker run -p 5000:5000 -d webtrack-app:v2
-
+# docker run -p 5000:5000 -d --net=host --name web-track -it webtrack-app:v2
 
 # lo siguiente ya no lo uso
 # docker build -t rtsp-app .

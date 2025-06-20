@@ -12,8 +12,14 @@ import cv2
 from flask import Response
 from app.models import MiTrack
 from app import db 
+from flask import redirect
 
 main = Blueprint('main', __name__)
+
+# para instalar el servidor de imagenes
+# npm install -g http-server  //Para instalar el servidor
+# cd F:\imageplate .    //ejemplo original->  http-server ./desktop-main1/imageplate
+# http-server .
 
 #@main.route('/')
 #def index():
@@ -41,30 +47,32 @@ def index():
     # Obtén la fecha seleccionada desde los parámetros de la URL
     selected_date = request.args.get('date', None)
     page = request.args.get('page', 1, type=int)  # Página actual (por defecto, 1)
-    per_page = 12  # Número de elementos por página
+    
+    
+    # Si no hay fecha o página, redirige a la URL con la fecha de hoy y página 1
+    if not selected_date or not page:
+        today = datetime.now().strftime("%Y-%m-%d")
+        return redirect(f"/?date={today}&page=1")
+    per_page = 15  # Número de elementos por página
 
     if selected_date:
-        # Si se seleccionó una fecha, filtra las imágenes por esa fecha
         images_query = MiTrack.query.filter(
             db.func.date(MiTrack.fechahora) == selected_date
         ).order_by(MiTrack.fechahora.desc())
     else:
-        # Si no se seleccionó una fecha, usa la fecha actual
         today = datetime.now().strftime("%Y-%m-%d")
         images_query = MiTrack.query.filter(
             db.func.date(MiTrack.fechahora) == today
         ).order_by(MiTrack.fechahora.desc())
 
-    # Aplica la paginación
     pagination = images_query.paginate(page=page, per_page=per_page)
     images = pagination.items
-
-    # Renderiza la plantilla con las imágenes, la paginación y la fecha seleccionada
+  
     return render_template(
         'index.html',
         images=images,
         pagination=pagination,
-        selected_date=selected_date
+        selected_date=selected_date,
     )
 
 @main.route('/images_by_date')

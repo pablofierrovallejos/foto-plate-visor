@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer</title>
+    <title>Plate Tracker</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
@@ -121,6 +121,40 @@
         /* ...otros estilos... */
 
     </style>
+
+
+    
+    <style>
+        .zoomed-image {
+            transform: scale(3);
+            transition: transform 0.3s ease;
+            cursor: zoom-out;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1050;
+        }
+        .zoomed-pip {
+            transform: scale(9); /* Zoom 300% para PiP */
+            transition: transform 0.3s ease;
+            cursor: zoom-out;
+            border: 2px solid #28a745;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1060;
+        }
+        .zoomed-image::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1049;
+        }
+    </style>
+    
+
 </head>
 <body>
 
@@ -161,12 +195,15 @@
                 <!-- Segunda columna: video en tiempo real -->    
                 <td style="width: 60%; text-align: center;">
                     <div class="monitor" style="padding-top: 10px;">
-                        <!-- <img src="{{ url_for('main.video_feed') }}" alt="Video en tiempo real" style="width: 100%; height: auto; border: 1px solid #dee2e6;"> -->
-                        <img src="http://localhost:5001/video_feed" alt="Stream en vivo" style="max-width:100%;"/>
+                       <!-- <img src="{{ url_for('main.video_feed') }}" alt="Video en tiempo real" style="width: 100%; height: auto; border: 1px solid #dee2e6;">  -->
+                       <!--<img src="http://localhost:5001/video_feed" alt="Stream en vivo" style="max-width:100%;"/> -->
+                       
+                       <iframe width="550" height="310" src="https://www.youtube.com/embed/live_stream?channel=UCTPMBs1bIGCE1q13JgGXzHQ&autoplay=1&mute=1" title="Live session" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </td>
 
-            </tr>
+                
+
         </table>
     </div>
 
@@ -186,11 +223,20 @@
                 {% for image in images %}
                     <div class="col-md-4">
                         <div class="card mb-4">
-                            <img src="data:image/jpeg;base64,{{ image.image | b64encode }}" class="card-img-top zoomable-image" alt="Image">
+                            <!-- <img src="data:image/jpeg;base64,{{ image.image | b64encode }}" class="card-img-top zoomable-image" alt="Image"> -->
+                                 <img src=  "http://192.168.2.38:8081/{{selected_date|replace('-', '')}}/{{image.imagefile_env}}"  class="card-img-top zoomable-image" alt="Image">
+                                 
+                               
+                                   <img src="http://192.168.2.38:8081/{{selected_date|replace('-', '')}}/{{image.imagefile_plt}}" 
+                                        alt="Picture in Picture"
+                                        class="zoomable-image"
+                                        style="position: absolute; bottom: 16px; right: 16px; width: 80px; height: auto; border: 2px solid #6f42c1; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); background: #232336;">
+                                 
+
                             <div class="card-body">
                                 <p class="card-text"><small class="text-muted">Tipo de Vehículo: {{ image.tipo }}</small></p>
-                                <p class="card-text"><small class="text-muted">Dirección: {{ image.direccion }}</small></p>
-                                <p class="card-text"><small class="text-muted">Fecha y hora: {{ image.fechahora }}</small></p>
+                                <p class="card-text"><small class="text-muted">DIR: {{ image.direccion }}</small></p>
+                                <p class="card-text"><small class="text-muted">Fecha: {{ image.fechahora }}</small></p>
                             </div>
                         </div>
                     </div>
@@ -277,11 +323,15 @@
     </style>
     <script>
         document.addEventListener('click', function (event) {
-            if (event.target.classList.contains('zoomable-image')) {
-                event.stopPropagation(); // Detiene la propagación del evento
-                console.log('Imagen clickeada'); // Mensaje de depuración
-                event.target.classList.toggle('zoomed-image'); // Alterna la clase para aplicar o quitar el zoom
+        if (event.target.classList.contains('zoomable-image')) {
+            event.stopPropagation();
+            // Si es imagen PiP (Picture in Picture)
+            if (event.target.alt === "Picture in Picture") {
+                event.target.classList.toggle('zoomed-pip');
+            } else {
+                event.target.classList.toggle('zoomed-image');
             }
+        }
         });
     </script>
 
