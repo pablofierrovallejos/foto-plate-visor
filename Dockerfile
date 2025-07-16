@@ -12,7 +12,12 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     vlc \
+    tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+# Configurar zona horaria Santiago
+ENV TZ=America/Santiago
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y \
     ffmpeg \
@@ -42,9 +47,8 @@ ENV FLASK_RUN_HOST=0.0.0.0
 CMD ["python", "-m", "flask", "run"]
 
 # docker build -t webtrack-app:v2 .
+# docker tag webtrack-app:v2 96552333aa/webtrack-app:v2
+# docker push 96552333aa/webtrack-app:v2
 # docker run -p 5000:5000 -d webtrack-app:v2
 # docker run -p 5000:5000 -d --net=host --name web-track -it webtrack-app:v2
 
-# lo siguiente ya no lo uso
-# docker build -t rtsp-app .
-# docker run -p 5000:5000 -d --net=host --name rtsp-container -it rtsp-app

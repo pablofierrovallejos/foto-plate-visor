@@ -9,7 +9,7 @@ import base64
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../static')
     app.config.from_object(Config)
 
     # Elimina esta línea si no necesitas MongoDB
