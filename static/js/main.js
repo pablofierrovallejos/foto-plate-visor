@@ -81,6 +81,7 @@ function enableDebugMode() {
 // Función para manejar navegación del header
 function handleHeaderNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
+    const loginBtn = document.querySelector('.login-btn');
     const currentPath = window.location.pathname;
     
     navItems.forEach(item => {
@@ -91,6 +92,13 @@ function handleHeaderNavigation() {
             item.classList.remove('active');
         }
     });
+    
+    // Handle login button active state
+    if (loginBtn && currentPath === '/login') {
+        loginBtn.classList.add('active');
+    } else if (loginBtn) {
+        loginBtn.classList.remove('active');
+    }
 }
 
 // Función para manejar la recarga del video cuando se vuelve a la pestaña

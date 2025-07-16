@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from .models import ImageModel
 from app.extensions import mongo  # Cambiado para evitar el ciclo
 from datetime import datetime
@@ -7,6 +7,11 @@ from flask import jsonify
 import requests  # Import the requests library
 from requests.auth import HTTPDigestAuth
 from flask import Response
+import jwt
+import json
+import os
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
 
 import cv2
 from flask import Response
@@ -337,3 +342,126 @@ def video_feed():
         cap.release()
 
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+# Authentication Routes
+@main.route('/login')
+def login():
+    """Render the login page"""
+    # Get Google Client ID from environment or config
+    google_client_id = os.environ.get('GOOGLE_CLIENT_ID', 'your-google-client-id.googleusercontent.com')
+    return render_template('login.html', google_client_id=google_client_id)
+
+@main.route('/auth/google', methods=['POST'])
+def google_auth():
+    """Handle Google Sign-In authentication"""
+    try:
+        # Get the credential from the request
+        credential = request.json.get('credential')
+        
+        if not credential:
+            return jsonify({'success': False, 'message': 'No credential provided'}), 400
+        
+        # Verify the token with Google
+        google_client_id = os.environ.get('GOOGLE_CLIENT_ID', 'your-google-client-id.googleusercontent.com')
+        
+        try:
+            # Verify the token
+            idinfo = id_token.verify_oauth2_token(
+                credential, 
+                google_requests.Request(), 
+                google_client_id
+            )
+            
+            # Get user info from the token
+            user_id = idinfo['sub']
+            email = idinfo['email']
+            name = idinfo['name']
+            picture = idinfo.get('picture', '')
+            
+            # Store user info in session
+            session['user'] = {
+                'id': user_id,
+                'email': email,
+                'name': name,
+                'picture': picture,
+                'auth_method': 'google'
+            }
+            
+            # Log the successful login
+            print(f"Google login successful for user: {email}")
+            
+            return jsonify({
+                'success': True, 
+                'message': 'Login successful',
+                'redirect_url': url_for('main.index')
+            })
+            
+        except ValueError as e:
+            print(f"Google token verification failed: {e}")
+            return jsonify({'success': False, 'message': 'Invalid token'}), 401
+            
+    except Exception as e:
+        print(f"Google auth error: {e}")
+        return jsonify({'success': False, 'message': 'Authentication failed'}), 500
+
+@main.route('/auth/login', methods=['POST'])
+def traditional_login():
+    """Handle traditional email/password login"""
+    try:
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        remember = data.get('remember', False)
+        
+        if not email or not password:
+            return jsonify({'success': False, 'message': 'Email y contraseña son requeridos'}), 400
+        
+        # For demo purposes, we'll accept any email/password combination
+        # In production, you should verify against a database
+        if email and password:
+            # Store user info in session
+            session['user'] = {
+                'id': email,
+                'email': email,
+                'name': email.split('@')[0],
+                'picture': '',
+                'auth_method': 'traditional'
+            }
+            
+            # Log the successful login
+            print(f"Traditional login successful for user: {email}")
+            
+            return jsonify({
+                'success': True, 
+                'message': 'Login successful',
+                'redirect_url': url_for('main.index')
+            })
+        else:
+            return jsonify({'success': False, 'message': 'Credenciales inválidas'}), 401
+            
+    except Exception as e:
+        print(f"Traditional login error: {e}")
+        return jsonify({'success': False, 'message': 'Error en el servidor'}), 500
+
+@main.route('/logout')
+def logout():
+    """Handle user logout"""
+    session.pop('user', None)
+    flash('Has cerrado sesión exitosamente', 'info')
+    return redirect(url_for('main.login'))
+
+@main.route('/profile')
+def profile():
+    """User profile page (requires authentication)"""
+    if 'user' not in session:
+        return redirect(url_for('main.login'))
+    
+    return render_template('profile.html', user=session['user'])
+
+def login_required(f):
+    """Decorator to require login for certain routes"""
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('main.login'))
+        return f(*args, **kwargs)
+    return decorated_function

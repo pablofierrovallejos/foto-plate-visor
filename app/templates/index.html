@@ -43,10 +43,27 @@
                     <a href="/dashboard" class="nav-item">Dashboard</a>
                     <a href="/reportes" class="nav-item">Reportes</a>
                     <a href="/configuracion" class="nav-item">Configuración</a>
-                    <a href="/login" class="login-btn">
-                        <span class="login-icon">👤</span>
-                        Login
-                    </a>
+                    {% if session.user %}
+                        <div class="user-info">
+                            <a href="/profile" class="user-profile">
+                                {% if session.user.picture %}
+                                    <img src="{{ session.user.picture }}" alt="Avatar" class="user-avatar">
+                                {% else %}
+                                    <div class="user-avatar-placeholder">👤</div>
+                                {% endif %}
+                                <span class="user-name">{{ session.user.name }}</span>
+                            </a>
+                            <a href="/logout" class="login-btn">
+                                <span class="login-icon">🚪</span>
+                                Logout
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="/login" class="login-btn">
+                            <span class="login-icon">👤</span>
+                            Login
+                        </a>
+                    {% endif %}
                 </nav>
             </div>
         </div>
@@ -63,7 +80,7 @@
                         <div class="app-title-container mt-5">
                             <h4 class="app-title">
                                 Plate Track Talcahuano
-                                <span class="version-badge">v1.0.1</span>
+                                <span class="version-badge">v1.0.2</span>
                             </h4>
                             
                             <!-- Dog Logo -->

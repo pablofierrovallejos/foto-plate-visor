@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Plate Track Talcahuano</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%236f42c1;stop-opacity:1' /><stop offset='100%25' style='stop-color:%23a374c4;stop-opacity:1' /></linearGradient></defs><rect width='100' height='100' fill='url(%23grad)' rx='15'/><rect x='20' y='35' width='50' height='25' fill='white' rx='3'/><rect x='15' y='55' width='60' height='8' fill='white' rx='4'/><circle cx='25' cy='70' r='8' fill='white'/><circle cx='65' cy='70' r='8' fill='white'/><circle cx='25' cy='70' r='4' fill='url(%23grad)'/><circle cx='65' cy='70' r='4' fill='url(%23grad)'/><rect x='25' y='40' width='40' height='15' fill='%236f42c1' rx='2'/><text x='45' y='50' text-anchor='middle' fill='white' font-family='Arial' font-size='8' font-weight='bold'>ABC</text><circle cx='75' cy='25' r='12' fill='white' opacity='0.9'/><path d='M70 20 L70 30 M65 25 L75 25' stroke='%236f42c1' stroke-width='2' stroke-linecap='round'/></svg>">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Header Principal -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-brand">
+                    <div class="header-logo">
+                        🚗
+                    </div>
+                    <div>
+                        <h1 class="header-title">Plate Track Talcahuano</h1>
+                        <p class="header-subtitle">Sistema de Seguimiento de Placas Vehiculares</p>
+                    </div>
+                </div>
+                
+                <nav class="header-nav">
+                    <a href="/" class="nav-item">Inicio</a>
+                    <a href="/dashboard" class="nav-item">Dashboard</a>
+                    <a href="/reportes" class="nav-item">Reportes</a>
+                    <a href="/configuracion" class="nav-item">Configuración</a>
+                    <a href="/logout" class="login-btn">
+                        <span class="login-icon">🚪</span>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            {% if user.picture %}
+                                <img src="{{ user.picture }}" alt="Avatar" class="avatar-img">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    👤
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h2 class="profile-name">{{ user.name }}</h2>
+                        <p class="profile-email">{{ user.email }}</p>
+                        <div class="profile-auth-method">
+                            {% if user.auth_method == 'google' %}
+                                <span class="auth-badge auth-google">
+                                    <i class="auth-icon">🔐</i>
+                                    Autenticado con Google
+                                </span>
+                            {% else %}
+                                <span class="auth-badge auth-traditional">
+                                    <i class="auth-icon">🔑</i>
+                                    Autenticación tradicional
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="profile-body">
+                        <div class="profile-section">
+                            <h4>Información de la cuenta</h4>
+                            <div class="info-item">
+                                <strong>ID de usuario:</strong> {{ user.id }}
+                            </div>
+                            <div class="info-item">
+                                <strong>Correo electrónico:</strong> {{ user.email }}
+                            </div>
+                            <div class="info-item">
+                                <strong>Método de autenticación:</strong> {{ user.auth_method|title }}
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <a href="/" class="btn btn-primary">
+                                <i class="btn-icon">🏠</i>
+                                Volver al inicio
+                            </a>
+                            <a href="/logout" class="btn btn-outline-danger">
+                                <i class="btn-icon">🚪</i>
+                                Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="custom-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-icon">
+                    <i class="footer-mail-icon">📧</i>
+                </div>
+                <div class="footer-text">
+                    <p class="footer-title">¿Necesitas ayuda o tienes alguna consulta?</p>
+                    <p class="footer-contact">Contáctanos en: 
+                        <a href="mailto:pablofierrovallejos@gmail.com" class="footer-email">
+                            pablofierrovallejos@gmail.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Plate Track Talcahuano - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
